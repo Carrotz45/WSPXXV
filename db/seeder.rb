@@ -15,7 +15,11 @@ def seed!(db)
 end
 
 def drop_tables(db)
-  db.execute('DROP TABLE IF EXISTS exempel')
+  db.execute('DROP TABLE IF EXISTS users')
+  db.execute('DROP TABLE IF EXISTS animals')
+  db.execute('DROP TABLE IF EXISTS animal_and_owner')
+
+
 end
 
 def create_tables(db)
@@ -30,28 +34,45 @@ def create_tables(db)
               description TEXT NOT NULL,
               age INTERGER,
               type_of_animal TEXT NOT NULL,
-              price INTERGER,
-              user_id_of_poster INTERGER NOT NULL)')
+              price INTERGER)')
+
+  db.execute('CREATE TABLE animal_and_owner(
+              user_id INT,
+              animal_id INT,
+              PRIMARY KEY (user_id, animal_id),
+              FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+              FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE)')
 end
+ 
 
-animals = [
-  ["Luna", "black cheerful cat", "4", "cat", "500", "1"]
-  ["Felix", "orange lazy cat", "12", "cat", "450", "2"]
-  ["Princess", "white american pitbull", "3", "dog", "500", "3"]
-]
-
-users = [
-  ["Andreas", "kasjdkldf"]
-  ["Birgitt", "dijfsoijf"]
-  ["Clementine", "psdkfsdfkkpok"]
-]
 def populate_tables(db)
 
+  animals = [
+    ["Luna", "black cheerful cat", "4", "cat", "500"],
+    ["Felix", "orange lazy cat", "12", "cat", "450"],
+    ["Princess", "white american pitbull", "3", "dog", "500"],
+    ["Rory", "golden retriver", "1", "dog", "600"]
+  ]
+
+  users = [
+    ["Andreas", "test_pwd1"],
+    ["Birgitt", "test_pwd2"],
+    ["Clementine", "test_pwd3"]
+  ]
+
   animals.each do |animal|
-    db.execute('INSERT INTO animals (name, description, age, type_of_animal, price, user_id_of_poster) VALUES (?,?,?,?,?,?)')
-  db.execute('INSERT INTO exempel (name, description, state) VALUES ("Köp mjölk", "3 liter mellanmjölk, eko",false)')
-  db.execute('INSERT INTO exempel (name, description, state) VALUES ("Köp julgran", "En rödgran",false)')
-  db.execute('INSERT INTO exempel (name, description, state) VALUES ("Pynta gran", "Glöm inte lamporna i granen och tomten",false)')
+    db.execute('INSERT INTO animals (name, description, age, type_of_animal, price) VALUES (?,?,?,?,?)', [animal])
+  end
+
+  users.each do |user|
+    db.execute('INSERT INTO users (user, pwd_digest) VALUES (?,?)', [user])
+  end
+
+  db.execute('INSERT INTO animal_and_owner (user_id, animal_id) VALUES(1, 1)')
+  db.execute('INSERT INTO animal_and_owner (user_id, animal_id) VALUES(1, 2)')
+  db.execute('INSERT INTO animal_and_owner (user_id, animal_id) VALUES(2, 3)')
+  db.execute('INSERT INTO animal_and_owner (user_id, animal_id) VALUES(3, 4)')
+
 end
 
 
