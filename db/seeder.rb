@@ -34,7 +34,8 @@ def create_tables(db)
               description TEXT NOT NULL,
               age INTERGER,
               type_of_animal TEXT NOT NULL,
-              price INTERGER)')
+              price INTERGER,
+              img TEXT)')
 
   db.execute('CREATE TABLE animal_and_owner(
               user_id INT,
@@ -48,10 +49,10 @@ end
 def populate_tables(db)
 
   animals = [
-    ["Luna", "black cheerful cat", "4", "cat", "500"],
-    ["Felix", "orange lazy cat", "12", "cat", "450"],
-    ["Princess", "white american pitbull", "3", "dog", "500"],
-    ["Rory", "golden retriver", "1", "dog", "600"]
+    ["Luna", "black cheerful cat", "4", "cat", "500", "Luna.jpg"],
+    ["Felix", "orange lazy cat", "12", "cat", "450", "Felix.jpg"],
+    ["Princess", "white american pitbull", "3", "dog", "500", "Princess.jpg"],
+    ["Rory", "golden retriver", "1", "dog", "600", "Rory.jpg"]
   ]
 
   users = [
@@ -61,7 +62,7 @@ def populate_tables(db)
   ]
 
   animals.each do |animal|
-    db.execute('INSERT INTO animals (name, description, age, type_of_animal, price) VALUES (?,?,?,?,?)', [animal])
+    db.execute('INSERT INTO animals (name, description, age, type_of_animal, price, img) VALUES (?,?,?,?,?,?)', [animal])
   end
 
   users.each do |user|
