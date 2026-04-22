@@ -1,0 +1,15 @@
+<h2> Hello #{@username["user"]}! </h2>"
+
+- @animals.each do |animal|
+
+
+    h2 #{animal["name"]}
+    p #{animal["description"]}
+    img src="img/#{animal["img"]}" alt="animal picture"/
+    p price: #{animal["price"]}
+
+    form action="/account/#{animal["id"]}/delete" method="post"
+        input type="submit" value="delete"
+
+    form action="/account/#{animal["id"]}/edit" method="get"
+        input type="submit" value="edit"

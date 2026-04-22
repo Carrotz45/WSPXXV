@@ -128,6 +128,38 @@ end
 
 get('/account') do
   user_id = session[:user_id]
+  @username = db.execute('SELECT user FROM users WHERE id=?', user_id)[0]
+
+  @user_animals = db.execute('SELECT animal_id from animal_and_owner where user_id=?', user_id)
+
+  @animals = []
+
+  @user_animals.each do |animal|
+    animal_hash = db.execute('SELECT * FROM animals WHERE id=?', animal["animal_id"])[0]
+    if animal_hash != nil
+      @animals << animal_hash
+    end
+  end
+
+  p @animals
+
+
+  slim(:account)
 end
+
+get('/account/:id/edit') do
+  slim(:edit)
+end
+
+post('/account/:id/update') do
+end
+
+post('/account/:id/delete') do
+  delete_this = params[:id]
+
+  db.execute("DELETE FROM animals WHERE id=?", [delete_this])
+  redirect('/account')
+end
+
 
 
