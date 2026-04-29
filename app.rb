@@ -121,37 +121,71 @@ post('/login') do
 
 end
 
-get('/logout') do
+post('/logout') do
   session[:user_id] = nil
   redirect('/')
 end
 
 get('/account') do
   user_id = session[:user_id]
-  @username = db.execute('SELECT user FROM users WHERE id=?', user_id)[0]
 
-  @user_animals = db.execute('SELECT animal_id from animal_and_owner where user_id=?', user_id)
+  if user_id
+    @username = db.execute('SELECT user FROM users WHERE id=?', user_id)[0]
 
-  @animals = []
+    @user_animals = db.execute('SELECT animal_id from animal_and_owner where user_id=?', user_id)
 
-  @user_animals.each do |animal|
-    animal_hash = db.execute('SELECT * FROM animals WHERE id=?', animal["animal_id"])[0]
-    if animal_hash != nil
-      @animals << animal_hash
+    @animals = []
+
+    @user_animals.each do |animal|
+      animal_hash = db.execute('SELECT * FROM animals WHERE id=?', animal["animal_id"])[0]
+      if animal_hash != nil
+        @animals << animal_hash
+      end
     end
+
+    p @animals
+  else
+
+    redirect('/login')
+
   end
 
-  p @animals
 
 
   slim(:account)
 end
 
 get('/account/:id/edit') do
+  @animal_id = params[:id]
   slim(:edit)
 end
 
 post('/account/:id/update') do
+
+  animal_id = params[:id]
+
+  user_id = session[:user_id]
+
+  p session[:user_id]
+
+  if user_id
+    new_name = params[:new_animal_name]
+    new_desc = params[:new_animal_desc]
+    new_age = params[:new_age]
+    type_of_animal = params[:type_of_animal]
+    new_price = params[:new_price]
+
+
+    db.execute("UPDATE animals SET name=?, description=?, age=?, type_of_animal=?, price=? WHERE id=?",[new_name, new_desc, new_age, type_of_animal, new_price, animal_id])
+    #animal_id = db.execute("SELECT id FROM animals WHERE name=?", new_name)
+
+
+    redirect('/account')
+  else 
+    redirect ('/login')
+  end
+
+
 end
 
 post('/account/:id/delete') do
