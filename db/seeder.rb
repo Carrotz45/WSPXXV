@@ -32,9 +32,9 @@ def create_tables(db)
               id INTEGER PRIMARY KEY AUTOINCREMENT,
               name TEXT NOT NULL,
               description TEXT NOT NULL,
-              age INTERGER,
+              age INTERGER NOT NULL,
               type_of_animal TEXT NOT NULL,
-              price INTERGER,
+              price INTERGER NOT NULL,
               img TEXT)')
 
   db.execute('CREATE TABLE animal_and_owner(
